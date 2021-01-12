@@ -1,0 +1,43 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CharacterMovement : MonoBehaviour
+{
+    public Animator moveAnimator;
+
+    private Vector3 movement;
+    private float movementSqrMagnitude;
+
+
+    void Update()
+    {
+        GetMovementInput();
+        CharacterRotation();
+        WalkingAnimation();
+    }
+
+
+    void GetMovementInput()
+    {
+        movement.x = Input.GetAxis("Horizontal");
+        movement.z = Input.GetAxis("Vertical");
+        movement = Vector3.ClampMagnitude(movement, SpeedManager.SpeedModifier);
+        movementSqrMagnitude = movement.sqrMagnitude;
+    }
+
+
+    void CharacterRotation()
+    {
+        if (movement != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(movement, Vector3.up);
+        }
+    }
+
+
+    void WalkingAnimation()
+    {
+        moveAnimator.SetFloat("MoveSpeed", movementSqrMagnitude * SpeedManager.SpeedModifier);
+    }
+}
